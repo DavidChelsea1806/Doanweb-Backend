@@ -15,11 +15,14 @@ const createUser = (newUser) => {
                     message: 'The email is already'
                 })
             }
+            
             const hash = bcrypt.hashSync(password, 10)
+           
             const createdUser = await User.create({
                 name,
                 email,
-                password: hash,
+                password:hash,
+               
                 phone
             })
         
@@ -39,7 +42,8 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { email, password } = userLogin
+        const { name, email, password, confirmPassword, phone } = userLogin
+        //const { email, password } = userLogin
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -51,6 +55,7 @@ const loginUser = (userLogin) => {
                 })
             }
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
+            
 
             if (!comparePassword) {
                 resolve({
@@ -62,6 +67,7 @@ const loginUser = (userLogin) => {
                 id: checkUser.id,
                 isAdmin: checkUser.isAdmin
             })
+            console.log("access_token",access_token)
 
             const refresh_token = await genneralRefreshToken({
                 id: checkUser.id,
@@ -79,6 +85,37 @@ const loginUser = (userLogin) => {
         }
     })
 }
+
+const updateUser = (id,data) => {
+    return new Promise(async (resolve, reject)=> {
+        try{
+            const checkUser = await User.findOne(
+                {
+                    _id: id
+                }
+            )
+           
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const updateUser = await User.findByIdAndUpdate(id,data,{new:true})
+            console.log("updateUser",updateUser)
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                
+            })
+        }
+        catch (e) {
+            reject(e)
+        }
+    } )
+ 
+}
+
 const deleteUser = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -92,7 +129,7 @@ const deleteUser = (id) => {
                 })
             }
 
-            await User.findByIdAndDelete(id)
+            //await User.findByIdAndDelete(id)
             resolve({
                 status: 'OK',
                 message: 'Delete user success',
@@ -104,5 +141,8 @@ const deleteUser = (id) => {
 }
 
 module.exports ={
-    createUser
+    createUser,
+    loginUser,
+    updateUser,
+    deleteUser
 }
