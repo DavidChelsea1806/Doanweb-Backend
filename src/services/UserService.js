@@ -129,7 +129,7 @@ const deleteUser = (id) => {
                 })
             }
 
-            //await User.findByIdAndDelete(id)
+            await User.findByIdAndDelete(id)
             resolve({
                 status: 'OK',
                 message: 'Delete user success',
@@ -140,9 +140,83 @@ const deleteUser = (id) => {
     })
 }
 
+const getAllUser = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allUser = await User.find()
+
+            resolve({
+                status: 'OK',
+                message: 'Get all user success',
+                data: allUser
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const getDetailsUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findOne({
+                _id: id
+            })
+            if (user === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+
+            console.log('User',user)
+            resolve({
+                status: 'OK',
+                message: 'Get detail user success',
+                data: user
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const refreshToken = (token) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // const user = await User.findOne({
+            //     _id: id
+            // })
+            // if (user === null) {
+            //     resolve({
+            //         status: 'ERR',
+            //         message: 'The user is not defined'
+            //     })
+            // }
+
+            // console.log('User',user)
+            // resolve({
+            //     status: 'OK',
+            //     message: 'Get detail user success',
+            //     data: user
+            // })
+            console.log("token", token)
+            resolve({
+                    status: 'OK',
+                    message: 'SUCESS'
+                })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports ={
     createUser,
     loginUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getAllUser,
+    getDetailsUser,
+    refreshToken
 }

@@ -29,9 +29,10 @@ const refreshTokenJwtService = (token) => {
                         message: 'The authemtication'
                     })
                 }
+                const {payload} = user
                 const access_token = await genneralAccessToken({
-                    id: user?.id,
-                    isAdmin: user?.isAdmin
+                    id: payload?.id,
+                    isAdmin: payload?.isAdmin
                 })
                 resolve({
                     status: 'OK',
