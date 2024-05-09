@@ -42,8 +42,8 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = userLogin
-        //const { email, password } = userLogin
+        const {  email, password } = userLogin
+       
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -159,6 +159,7 @@ const getAllUser = () => {
 const getDetailsUser = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            
             const user = await User.findOne({
                 _id: id
             })

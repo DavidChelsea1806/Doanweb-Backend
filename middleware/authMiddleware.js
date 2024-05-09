@@ -13,8 +13,8 @@ const authMiddleWare =(req,res, next)=> {
                 status: 'ERROR'
             })
         }
-        const { payload} =user 
-        if(payload?.isAdmin)
+       
+        if(user?.isAdmin)
         {
             console.log('true')
             next()
@@ -43,8 +43,8 @@ const authUserMiddleWare =(req,res, next)=> {
                 status: 'ERROR'
             })
         }
-        const { payload} =user 
-        if(payload?.isAdmin || payload?.id === userId)
+      
+        if(user?.isAdmin || user?.id === userId)
         {
             console.log('true')
             next()
