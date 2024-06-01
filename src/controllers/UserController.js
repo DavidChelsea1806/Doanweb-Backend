@@ -1,6 +1,5 @@
 const UserService = require('../services/UserService')
 const JwtService = require('../services/JwtService')
-
 const createUser = async (req, res) => {
     try {
         const { name, email, password, confirmPassword, phone } = req.body
@@ -22,7 +21,10 @@ const createUser = async (req, res) => {
                 message: 'The password is equal confirmPassword'
             })
         }
+        console.log("isCheckEmail",isCheckEmail)
+        
         const response = await UserService.createUser(req.body)
+     
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -33,10 +35,11 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body
+        const {  email, password} = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!email || !password) {
+        //if (!email || !password) {
+        if (!email || !password ) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
@@ -48,14 +51,17 @@ const loginUser = async (req, res) => {
             })
         }
         const response = await UserService.loginUser(req.body)
-        const { refresh_token, ...newReponse } = response
+        console.log("respone ",response)
+       const { refresh_token, ...newReponse } = response
         res.cookie('refresh_token', refresh_token, {
             httpOnly: true,
             secure: false,
             sameSite: 'strict',
             path: '/',
         })
-        return res.status(200).json({...newReponse, refresh_token})
+        return res.status(200).json({...newReponse})
+        
+        //return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
             message: e
@@ -67,6 +73,7 @@ const updateUser = async (req, res) => {
     try {
         const userId = req.params.id
         const data = req.body
+        console.log('userid',userId)
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
@@ -84,7 +91,10 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
+
         const userId = req.params.id
+        const token =req.headers
+     
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
@@ -100,17 +110,11 @@ const deleteUser = async (req, res) => {
     }
 }
 
-const deleteMany = async (req, res) => {
+const getAllUser = async (req,res) => {
     try {
-        const ids = req.body.ids
-        if (!ids) {
-            return res.status(200).json({
-                status: 'ERR',
-                message: 'The ids is required'
-            })
-        }
-        const response = await UserService.deleteManyUser(ids)
+        const response= await UserService.getAllUser()
         return res.status(200).json(response)
+       
     } catch (e) {
         return res.status(404).json({
             message: e
@@ -118,21 +122,10 @@ const deleteMany = async (req, res) => {
     }
 }
 
-
-const getAllUser = async (req, res) => {
-    try {
-        const response = await UserService.getAllUser()
-        return res.status(200).json(response)
-    } catch (e) {
-        return res.status(404).json({
-            message: e
-        })
-    }
-}
-
-const getDetailsUser = async (req, res) => {
+const getDetailsUser = async (req,res) => {
     try {
         const userId = req.params.id
+       console.log("Userid",userId)
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
@@ -148,9 +141,10 @@ const getDetailsUser = async (req, res) => {
     }
 }
 
-const refreshToken = async (req, res) => {
+const refreshToken = async (req,res) => {
     try {
-        let token = req.headers.token.split(' ')[1]
+        //const token = req.headers.token?.split(' ')[1]
+        const token = req.cookie.refresh_token.split(' ')[1]
         if (!token) {
             return res.status(200).json({
                 status: 'ERR',
@@ -165,7 +159,6 @@ const refreshToken = async (req, res) => {
         })
     }
 }
-
 
 const logoutUser = async (req, res) => {
     try {
@@ -188,6 +181,5 @@ module.exports = {
     getAllUser,
     getDetailsUser,
     refreshToken,
-    logoutUser,
-    deleteMany
+    logoutUser
 }

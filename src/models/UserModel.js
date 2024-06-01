@@ -6,9 +6,8 @@ const userSchema = new mongoose.Schema(
         password: { type: String, required: true },
         isAdmin: { type: Boolean, default: false, required: true },
         phone: { type: Number },
-        address: { type: String },
-        avatar: { type: String },
-        city: {type: String}
+        acces_token: {type: String , require :true},
+        refresh_token: {type:String , require: true},
     },
     {
         timestamps: true
