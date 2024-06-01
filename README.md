@@ -22,7 +22,7 @@ Trang web phải đảm bảo được các mục tiêu:
 # Về Frontend hệ thống 
 Các bạn truy cập link này để cài đặt backen  cho hệ thống
 
-https://github.com/DavidChelsea1806/Doanweb-Backend 
+https://github.com/xina99999/Doanweb
 # Các công nghệ sử dụng trong project
 - Front-end: reactjs
 - Back-end: nodejs
